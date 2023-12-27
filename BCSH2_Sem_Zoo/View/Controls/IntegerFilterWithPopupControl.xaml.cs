@@ -79,7 +79,7 @@ namespace BCSH2_Sem_Zoo.View.Controls
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
     }
@@ -102,9 +102,7 @@ namespace BCSH2_Sem_Zoo.View.Controls
                 return false;
 
             if (!double.TryParse(value.ToString(), out var number))
-            {
                 return false;
-            }
 
             return (number >= Min) && (number <= Max);
         }

@@ -67,9 +67,6 @@
             </MenuItem>
         </Menu>
 
-
-
-
         <DockPanel Margin="10"
                   Grid.Row="1">
             <Label HorizontalAlignment="Left">Table:</Label>
@@ -103,21 +100,6 @@
                   dgx:DataGridFilter.StartFilteringKeyGesture="Ctrl+F"
                   dgx:DataGridFilter.ContentFilterFactory="{x:Static dgx:RegexContentFilterFactory.Default}"
         >
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="Validation.ErrorTemplate">
-                        <Setter.Value>
-                            <ControlTemplate>
-                                <!-- Your error visual feedback -->
-                                <Border BorderBrush="Red" BorderThickness="1">
-                                    <AdornedElementPlaceholder />
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </DataGrid.CellStyle>
-
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Remove"

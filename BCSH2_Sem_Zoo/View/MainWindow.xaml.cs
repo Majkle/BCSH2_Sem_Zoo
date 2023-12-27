@@ -13,7 +13,7 @@ namespace BCSH2_Sem_Zoo
 {
     public partial class MainWindow : Window, IMainWindow
     {
-        private MainViewModel mainViewModel;
+        private readonly MainViewModel mainViewModel;
 
         public MainWindow()
         {
@@ -29,10 +29,8 @@ namespace BCSH2_Sem_Zoo
         {
             // Tooltip when cell contains error
             if (e.Column is DataGridTextColumn)
-            {
                 ((DataGridBoundColumn)e.Column).EditingElementStyle = (Style)this.Resources["ErrTemplate"];
-            }
-
+            
             // Enable validations from IDataErrorInfo
             (((DataGridBoundColumn)e.Column).Binding as Binding)!.ValidatesOnDataErrors = true;
 
@@ -73,7 +71,7 @@ namespace BCSH2_Sem_Zoo
                 };
             }
 
-            //Reset filter on table switch xd
+            //Reset column filters on table switch xd
             AnimalDataGrid.SetIsAutoFilterEnabled(false);
             AnimalDataGrid.SetIsAutoFilterEnabled(true);
 
@@ -122,7 +120,7 @@ namespace BCSH2_Sem_Zoo
         /// <summary>
         /// Unresolved errors in data is persisted even when table is changed, resulting in NPE...
         /// Controls should be enabled based on the state of Command... Well yes, but actualy no.
-        /// Server only UI purpose
+        /// Serves only GUI purpose
         /// </summary>
         private void EnableControlsBasedOnDataGridErrors()
         {

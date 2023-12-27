@@ -27,14 +27,14 @@ namespace BCSH2_Sem_Zoo.Model.Context
 
         public bool IsTableEmpty<T>() where T : class
         {
-            return Set<T>().Count() == 0;
+            return !Set<T>().Any();
         }
 
         public bool IsDatabaseEmpty()
         {
             return Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && (t.Namespace == "BCSH2_Sem_Zoo.Model.Entity")).All(t =>
             {
-                bool.TryParse(typeof(ZooContext).GetMethod(nameof(IsTableEmpty))?.MakeGenericMethod(new[] { t }).Invoke(this, null)?.ToString(), out bool res);
+                _ = bool.TryParse(typeof(ZooContext).GetMethod(nameof(IsTableEmpty))?.MakeGenericMethod(new[] { t }).Invoke(this, null)?.ToString(), out bool res);
                 return res;
             });
         }

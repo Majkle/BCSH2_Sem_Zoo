@@ -4,35 +4,28 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Shapes;
 
 namespace BCSH2_Sem_Zoo.ViewModel
 {
     public partial class MainViewModel : ObservableObject
     {
-        public ZooContext zooContext;
+        private ZooContext zooContext;
 
+        #region Properties
         [ObservableProperty]
         private string windowTitle;
 
         [ObservableProperty]
-        private object? currentTable; //TOOD tzv na prasáka
+        private object? currentTable;
 
         [ObservableProperty]
         private string absolutePath;
@@ -48,7 +41,7 @@ namespace BCSH2_Sem_Zoo.ViewModel
 
         [ObservableProperty]
         private bool controlsEnabled = true;
-
+        #endregion
 
         public MainViewModel()
         {
@@ -64,14 +57,13 @@ namespace BCSH2_Sem_Zoo.ViewModel
             return zooContext.Set<TEntity>().Local.ToObservableCollection();
         }
 
-        partial void OnSelectedTableTypeChanged(Type value)
+        public bool DataGridHasErrors()
         {
-            ChangeDisplayedTable(value);
-        }
+            foreach (var item in AnimalDataGrid.Items)
+                if (AnimalDataGrid.ItemContainerGenerator.ContainerFromItem(item) is DataGridRow row && Validation.GetHasError(row))
+                    return true;
 
-        private List<Type> GetAllEntityTypes()
-        {
-            return Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && (t.Namespace == "BCSH2_Sem_Zoo.Model.Entity")).ToList();
+            return false;
         }
 
         public int GetMaxIdOfSelectedTable()
@@ -79,25 +71,23 @@ namespace BCSH2_Sem_Zoo.ViewModel
             return (int)typeof(ZooContext).GetMethod(nameof(zooContext.MaxIdOfEntity))?.MakeGenericMethod(new[] { SelectedTableType }).Invoke(zooContext, null)!;
         }
 
-        private void ChangeDisplayedTable(Type entityType)
-        {
-            CurrentTable = typeof(MainViewModel).GetMethod(nameof(MainViewModel.GetObservableCollectionForEntity))?.MakeGenericMethod(entityType)?.Invoke(this, null);
-        }
-
+        #region Commands
         [RelayCommand(CanExecute = nameof(CanOpenExistingDatabase))]
         private void OpenExistingDatabase()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-
-            ofd.Filter = "Databáze (*.db)|*.db|Všechny soubory (*.*)|*.*";
-            ofd.RestoreDirectory = true;
-            ofd.Title = "Otevření existující databáze";
+            OpenFileDialog ofd = new()
+            {
+                Filter = "Databáze (*.db)|*.db|Všechny soubory (*.*)|*.*",
+                RestoreDirectory = true,
+                Title = "Otevření existující databáze"
+            };
 
             if (ofd.ShowDialog() == true)
             {
                 OpenCreateDatabase(ofd.FileName);
             }
         }
+
         private bool CanOpenExistingDatabase()
         {
             return !DataGridHasErrors();
@@ -106,11 +96,12 @@ namespace BCSH2_Sem_Zoo.ViewModel
         [RelayCommand(CanExecute = (nameof(CanOpenNewDatabase)))]
         private void OpenNewDatabase()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-
-            sfd.Filter = "Databáze (*.db)|*.db|Všechny soubory (*.*)|*.*";
-            sfd.RestoreDirectory = true;
-            sfd.Title = "Vytvoření nové databáze";
+            SaveFileDialog sfd = new()
+            {
+                Filter = "Databáze (*.db)|*.db|Všechny soubory (*.*)|*.*",
+                RestoreDirectory = true,
+                Title = "Vytvoření nové databáze"
+            };
 
             if (sfd.ShowDialog() == true)
             {
@@ -121,37 +112,6 @@ namespace BCSH2_Sem_Zoo.ViewModel
         private bool CanOpenNewDatabase()
         {
             return !DataGridHasErrors();
-        }
-
-        private void OpenCreateDatabase(string path)
-        {
-            zooContext.Database.CloseConnection();
-            zooContext = new();
-            zooContext.ChangeDatabasePath(path);
-
-            LoadDatabase();
-            SetWindowTitle();
-        }
-
-        private void SetWindowTitle()
-        {
-            Regex regexMatchingDataSource = new Regex(@"(?<=Data Source=)[^;]+");
-            WindowTitle = $"BCSH2 Sem - " + System.IO.Path.GetFileName(regexMatchingDataSource.Match(zooContext.Database.GetConnectionString() ?? "").Value);
-        }
-
-        private void LoadDatabase()
-        {
-            zooContext.Database.EnsureCreated();
-            zooContext.Animal.Load();
-            zooContext.Caretaker.Load();
-            zooContext.Show.Load();
-            zooContext.BreedingNeed.Load();
-            zooContext.BreedingNeedType.Load();
-            zooContext.HistoryAnimalBreedingNeed.Load();
-            zooContext.Spieces.Load();
-
-            CurrentTable = zooContext.Animal.Local.ToObservableCollection();
-            SelectedTableType = AvailableTableTypes.FirstOrDefault(typeof(Animal));
         }
 
         [RelayCommand(CanExecute = nameof(CanInitializeData))]
@@ -189,19 +149,52 @@ namespace BCSH2_Sem_Zoo.ViewModel
         {
             return !DataGridHasErrors();
         }
+        #endregion
 
-        public bool DataGridHasErrors()
+        partial void OnSelectedTableTypeChanged(Type value)
         {
-            foreach (var item in AnimalDataGrid.Items)
-            {
-                var row = AnimalDataGrid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
-                if (row != null && Validation.GetHasError(row))
-                {
-                    return true;
-                }
-            }
+            ChangeDisplayedTable(value);
+        }
 
-            return false;
+        private static List<Type> GetAllEntityTypes()
+        {
+            return Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && (t.Namespace == "BCSH2_Sem_Zoo.Model.Entity")).ToList();
+        }
+
+        private void SetWindowTitle()
+        {
+            Regex regexMatchingDataSource = new(@"(?<=Data Source=)[^;]+");
+            WindowTitle = $"BCSH2 Sem - " + System.IO.Path.GetFileName(regexMatchingDataSource.Match(zooContext.Database.GetConnectionString() ?? "").Value);
+        }
+
+        private void ChangeDisplayedTable(Type entityType)
+        {
+            CurrentTable = typeof(MainViewModel).GetMethod(nameof(MainViewModel.GetObservableCollectionForEntity))?.MakeGenericMethod(entityType)?.Invoke(this, null);
+        }
+
+        private void OpenCreateDatabase(string path)
+        {
+            zooContext.Database.CloseConnection();
+            zooContext = new();
+            zooContext.ChangeDatabasePath(path);
+
+            LoadDatabase();
+            SetWindowTitle();
+        }
+
+        private void LoadDatabase()
+        {
+            zooContext.Database.EnsureCreated();
+            zooContext.Animal.Load();
+            zooContext.Caretaker.Load();
+            zooContext.Show.Load();
+            zooContext.BreedingNeed.Load();
+            zooContext.BreedingNeedType.Load();
+            zooContext.HistoryAnimalBreedingNeed.Load();
+            zooContext.Spieces.Load();
+
+            CurrentTable = zooContext.Animal.Local.ToObservableCollection();
+            SelectedTableType = AvailableTableTypes.FirstOrDefault(typeof(Animal));
         }
     }
 }

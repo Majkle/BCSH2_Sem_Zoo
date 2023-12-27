@@ -5,6 +5,9 @@ using System.Windows.Data;
 
 namespace BCSH2_Sem_Zoo.View.Markup
 {
+    /// <summary>
+    /// Used for ComboBox Items do display the DecsriptionAttribute
+    /// </summary>
     public class TypeToDescriptionConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

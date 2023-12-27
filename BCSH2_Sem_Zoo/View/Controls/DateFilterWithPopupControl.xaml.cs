@@ -1,8 +1,6 @@
 ﻿using DataGridExtensions;
 using System;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Input;
 
 namespace BCSH2_Sem_Zoo.View.Controls
 {
@@ -16,8 +14,8 @@ namespace BCSH2_Sem_Zoo.View.Controls
             InitializeComponent();
         }
 
-        private static DateTime initialMinDate = DateTime.Now.AddYears(-1);
-        private static DateTime initialMaxDate = DateTime.Now;
+        private static readonly DateTime initialMinDate = DateTime.Now.AddYears(-1);
+        private static readonly DateTime initialMaxDate = DateTime.Now;
 
         public string Caption
         {
@@ -100,9 +98,7 @@ namespace BCSH2_Sem_Zoo.View.Controls
                 return false;
 
             if (!DateTime.TryParse(value.ToString(), out var date))
-            {
                 return false;
-            }
 
             return DateTime.Compare(date, Min) >= 0 && DateTime.Compare(date, Max) <= 0;
         }

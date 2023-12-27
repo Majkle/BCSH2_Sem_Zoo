@@ -27,4 +27,4 @@ Externí knihovny:
 Aplikační Menu obsahuje v nabídce inicializaci databáze, pokud je prázdná.
 
 ## Known Issues
-Když jsou v DataGrid zadané špatné údaje (červená buňka) a aplikační Menu je otevřené poprvé od spuštění aplikace, její MenuItemy zůstanou disabled.
+Když jsou v DataGrid zadané špatné údaje (červená buňka) a aplikační Menu je otevřené poprvé od spuštění aplikace, její MenuItemy zůstanou disabled. Ale klávesové zkratky fungují... 🌈
