@@ -1,0 +1,52 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table Animal  {
+    AnimalId     NUMBER [primary key]
+    Name         VARCHAR [NOT NULL]
+    Origin       VARCHAR [NOT NULL]
+    Birthday     DATETIME [NOT NULL]
+    Acquired     DATETIME 
+    Caretaker    NUMBER
+}
+
+Table Caretaker {
+    CaretakerId    NUMBER [primary key]
+    Firstname      VARCHAR [NOT NULL]
+    Lastname       VARCHAR [NOT NULL]
+    Sallary        NUMBER [NOT NULL]
+}
+
+Table Show {
+    ShowId       NUMBER [primary key]
+    Animal       NUMBER [NOT NULL]
+    Caretaker    NUMBER [NOT NULL]
+    Date         DATETIME [NOT NULL]
+}
+
+Table BreedingNeeds {
+    BreedingNeedsId     NUMBER [primary key]
+    Producer            VARCHAR [NOT NULL]
+    Name                VARCHAR [NOT NULL]
+    BreedingNeedType    NUMBER [NOT NULL]
+}
+
+Table BreedingNeedType {
+    BreedingNeedTypeId   NUMBER [primary key]
+    Name                  VARCHAR [NOT NULL]
+}
+
+Table HistoryAnimalBreedingNeeds {
+    HistoryAnimalBreedingNeedsId  NUMBER [primary key]
+    Animal                        NUMBER [NOT NULL]
+    BreedingNeed                  NUMBER [NOT NULL]
+    Served                        DATETIME [NOT NULL]
+}
+
+
+Ref: BreedingNeeds.BreedingNeedType < BreedingNeedType.BreedingNeedTypeId
+Ref: HistoryAnimalBreedingNeeds.BreedingNeed < BreedingNeeds.BreedingNeedType
+Ref: HistoryAnimalBreedingNeeds.Animal < Animal.AnimalId
+Ref: Animal.Caretaker < Caretaker.CaretakerId
+Ref: Show.Animal > Animal.AnimalId
+Ref: Show.Caretaker > Caretaker.CaretakerId

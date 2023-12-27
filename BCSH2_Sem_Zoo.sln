@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCSH2_Sem_Zoo", "BCSH2_Sem_Zoo\BCSH2_Sem_Zoo.csproj", "{B883B846-DD3A-4EF5-B865-95242FDD9B84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BCSH2_Sem_Zoo", "BCSH2_Sem_Zoo\BCSH2_Sem_Zoo.csproj", "{B883B846-DD3A-4EF5-B865-95242FDD9B84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dbDiagram", "dbDiagram", "{2AFD450B-FFB7-4DE8-975B-9470407E0117}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\Downloads\DbDiagram.png = ..\..\..\..\Downloads\DbDiagram.png
+		dbDiagram.txt = dbDiagram.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
