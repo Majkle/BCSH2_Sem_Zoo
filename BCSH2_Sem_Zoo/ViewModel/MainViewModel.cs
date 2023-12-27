@@ -57,7 +57,6 @@ namespace BCSH2_Sem_Zoo.ViewModel
 
             LoadDatabase();
             SetWindowTitle();
-            CommandManager.InvalidateRequerySuggested();
         }
 
         public ObservableCollection<TEntity> GetObservableCollectionForEntity<TEntity>() where TEntity : class
@@ -149,6 +148,7 @@ namespace BCSH2_Sem_Zoo.ViewModel
             zooContext.BreedingNeed.Load();
             zooContext.BreedingNeedType.Load();
             zooContext.HistoryAnimalBreedingNeed.Load();
+            zooContext.Spieces.Load();
 
             CurrentTable = zooContext.Animal.Local.ToObservableCollection();
             SelectedTableType = AvailableTableTypes.FirstOrDefault(typeof(Animal));

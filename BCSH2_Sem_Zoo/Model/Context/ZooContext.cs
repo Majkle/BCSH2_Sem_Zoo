@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using BCSH2_Sem_Zoo.Model.Entity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +8,7 @@ namespace BCSH2_Sem_Zoo.Model.Context
     public class ZooContext : DbContext
     {
         public DbSet<Animal> Animal { get; set; }
+        public DbSet<Spieces> Spieces { get; set; }
         public DbSet<Caretaker> Caretaker { get; set; }
         public DbSet<Show> Show { get; set; }
         public DbSet<BreedingNeed> BreedingNeed { get; set; }
@@ -23,7 +17,7 @@ namespace BCSH2_Sem_Zoo.Model.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=zoo.db");
+            optionsBuilder.UseSqlite(@"Data Source=C:\Users\user\Desktop\zoo.db");
         }
 
         public void ChangeDatabasePath(string path)
@@ -38,7 +32,7 @@ namespace BCSH2_Sem_Zoo.Model.Context
 
         public bool IsDatabaseEmpty()
         {
-            return Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && (t.FullName?.StartsWith("BCSH2_Sem_Zoo.Model.Entity.") ?? false)).All(t =>
+            return Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && (t.Namespace == "BCSH2_Sem_Zoo.Model.Entity")).All(t =>
             {
                 bool.TryParse(typeof(ZooContext).GetMethod(nameof(IsTableEmpty))?.MakeGenericMethod(new[] { t }).Invoke(this, null)?.ToString(), out bool res);
                 return res;

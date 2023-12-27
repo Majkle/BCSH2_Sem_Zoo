@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-    
+
 namespace BCSH2_Sem_Zoo.Model.Entity
 {
 
@@ -14,7 +14,10 @@ namespace BCSH2_Sem_Zoo.Model.Entity
         public int Id { get; set; }
 
         [DisplayName("Nickname")]
-        public string Name { get; set; }
+        public string Nickname { get; set; }
+
+        [DisplayName("Spieces")]
+        public Spieces Spieces { get; set; }
 
         [DisplayName("Continent")]
         public string Origin { get; set; }
@@ -39,7 +42,7 @@ namespace BCSH2_Sem_Zoo.Model.Entity
 
         public override string ToString()
         {
-            return $"[{Id}] {Name}";
+            return $"[{Id}] {Nickname}";
         }
 
         [DataGridHiddenColumn]
@@ -51,8 +54,11 @@ namespace BCSH2_Sem_Zoo.Model.Entity
             {
                 switch (columnName)
                 {
-                    case nameof(Name):
-                        if (string.IsNullOrWhiteSpace(Name)) return "Name is required.";
+                    case nameof(Nickname):
+                        if (string.IsNullOrWhiteSpace(Nickname)) return "Name is required.";
+                        break;
+                    case nameof(Spieces):
+                        if (Spieces == null) return "Spieces is required.";
                         break;
                     case nameof(Origin):
                         if (string.IsNullOrWhiteSpace(Origin)) return "Continent is required.";

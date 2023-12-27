@@ -2,51 +2,58 @@
 // Docs: https://dbml.dbdiagram.io/docs
 
 Table Animal  {
-    AnimalId     NUMBER [primary key]
-    Name         VARCHAR [NOT NULL]
-    Origin       VARCHAR [NOT NULL]
-    Birthday     DATETIME [NOT NULL]
-    Acquired     DATETIME 
-    Caretaker    NUMBER
+    Id            NUMBER [primary key]
+    Name          VARCHAR [NOT NULL]
+    Spieces       NUMBER [NOT NULL]
+    Origin        VARCHAR [NOT NULL]
+    Birthday      DATETIME [NOT NULL]
+    Acquired      DATETIME 
+    Caretaker     NUMBER
 }
 
 Table Caretaker {
-    CaretakerId    NUMBER [primary key]
+    Id    NUMBER [primary key]
     Firstname      VARCHAR [NOT NULL]
     Lastname       VARCHAR [NOT NULL]
     Sallary        NUMBER [NOT NULL]
 }
 
+Table Spieces {
+    Id                    NUMBER [primary key]
+    Name                  VARCHAR [NOT NULL]
+}
+
 Table Show {
-    ShowId       NUMBER [primary key]
+    Id           NUMBER [primary key]
     Animal       NUMBER [NOT NULL]
     Caretaker    NUMBER [NOT NULL]
     Date         DATETIME [NOT NULL]
 }
 
 Table BreedingNeeds {
-    BreedingNeedsId     NUMBER [primary key]
+    Id                  NUMBER [primary key]
     Producer            VARCHAR [NOT NULL]
     Name                VARCHAR [NOT NULL]
     BreedingNeedType    NUMBER [NOT NULL]
 }
 
 Table BreedingNeedType {
-    BreedingNeedTypeId   NUMBER [primary key]
+    Id                    NUMBER [primary key]
     Name                  VARCHAR [NOT NULL]
 }
 
 Table HistoryAnimalBreedingNeeds {
-    HistoryAnimalBreedingNeedsId  NUMBER [primary key]
+    Id                            NUMBER [primary key]
     Animal                        NUMBER [NOT NULL]
     BreedingNeed                  NUMBER [NOT NULL]
     Served                        DATETIME [NOT NULL]
 }
 
 
-Ref: BreedingNeeds.BreedingNeedType < BreedingNeedType.BreedingNeedTypeId
+Ref: BreedingNeeds.BreedingNeedType < BreedingNeedType.Id
 Ref: HistoryAnimalBreedingNeeds.BreedingNeed < BreedingNeeds.BreedingNeedType
-Ref: HistoryAnimalBreedingNeeds.Animal < Animal.AnimalId
-Ref: Animal.Caretaker < Caretaker.CaretakerId
-Ref: Show.Animal > Animal.AnimalId
-Ref: Show.Caretaker > Caretaker.CaretakerId
+Ref: HistoryAnimalBreedingNeeds.Animal < Animal.Id
+Ref: Animal.Spieces > Spieces.Id
+Ref: Animal.Caretaker < Caretaker.Id
+Ref: Show.Animal > Animal.Id
+Ref: Show.Caretaker > Caretaker.Id
