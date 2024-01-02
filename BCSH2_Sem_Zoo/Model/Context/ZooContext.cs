@@ -17,7 +17,7 @@ namespace BCSH2_Sem_Zoo.Model.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=C:\Users\user\Desktop\zoo.db");
+            optionsBuilder.UseSqlite(@"Data Source=zoo.db");
         }
 
         public void ChangeDatabasePath(string path)
